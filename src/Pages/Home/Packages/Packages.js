@@ -34,9 +34,9 @@ const Packages = () => {
     },
   ];
   return (
-    <div className="container">
+    <div id="packages" className="container">
       <h2 className="text-center">Special Packages</h2>
-      <div className="row">
+      <div className="row ms-5">
         {packages.map((p) => (
           <Package key={p.id} p={p}></Package>
         ))}

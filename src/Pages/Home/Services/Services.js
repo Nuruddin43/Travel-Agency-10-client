@@ -89,7 +89,7 @@ const Services = () => {
   ];
 
   return (
-    <div>
+    <div id="services">
       <h1 className="text-center mt-5">Popular Destination</h1>
       <div className="services-container">
         {services.map((service) => (
