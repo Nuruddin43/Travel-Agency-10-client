@@ -1,13 +1,17 @@
 import React from "react";
 import { Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import {
+  useCreateUserWithEmailAndPassword,
+  useUpdateProfile,
+} from "react-firebase-hooks/auth";
 import auth from "../../../firebase.init";
 import SocialLogin from "../SocialLogin/SocialLogin";
 
 const Register = () => {
   const [createUserWithEmailAndPassword, user, loading, error] =
-    useCreateUserWithEmailAndPassword(auth);
+    useCreateUserWithEmailAndPassword(auth, { sendEmailVerification: true });
+  const [updateProfile, updating, updateError] = useUpdateProfile(auth);
   const navigate = useNavigate();
 
   const navigateLogin = () => {
@@ -15,16 +19,19 @@ const Register = () => {
   };
 
   if (user) {
-    navigate("/home");
+    console.log(user);
   }
 
-  const handleRegister = (event) => {
+  const handleRegister = async (event) => {
     event.preventDefault();
     const name = event.target.name.value;
     const email = event.target.email.value;
     const password = event.target.password.value;
 
-    createUserWithEmailAndPassword(name, email, password);
+    await createUserWithEmailAndPassword(email, password);
+    await updateProfile({ displayName: name });
+    console.log("Updated profile");
+    navigate("/home");
   };
   return (
     <div className="container w-50 mx-auto">
@@ -59,14 +66,14 @@ const Register = () => {
           />
         </Form.Group>
 
-        <Button variant="primary" type="Register">
+        <Button variant="primary w-50 mx-auto d-block mb-2" type="Register">
           Register
         </Button>
       </Form>
       <p>
         Already have an account?
         <span
-          className="text-danger text-decoration-none"
+          className="text-primary text-decoration-none"
           onClick={navigateLogin}
         >
           Please Login

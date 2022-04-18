@@ -1,8 +1,12 @@
 import React, { useRef } from "react";
-import { Button, Form } from "react-bootstrap";
-import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { Button, Form, ToastContainer } from "react-bootstrap";
+import {
+  useSendPasswordResetEmail,
+  useSignInWithEmailAndPassword,
+} from "react-firebase-hooks/auth";
 import { useLocation, useNavigate } from "react-router-dom";
 import auth from "../../../firebase.init";
+import Loading from "../../Shared/Loading/Loading";
 import SocialLogin from "../SocialLogin/SocialLogin";
 
 const Login = () => {
@@ -18,8 +22,14 @@ const Login = () => {
   const [signInWithEmailAndPassword, user, loading, error] =
     useSignInWithEmailAndPassword(auth);
 
+  const [sendPasswordResetEmail, sending] = useSendPasswordResetEmail(auth);
+
   if (user) {
     navigate(from, { replace: true });
+  }
+
+  if (loading || sending) {
+    return <Loading></Loading>;
   }
 
   if (error) {
@@ -34,6 +44,14 @@ const Login = () => {
 
   const navigateRegister = () => {
     navigate("/register");
+  };
+
+  const resetPassword = async () => {
+    const email = emailRef.current.value;
+    if (email) {
+      await sendPasswordResetEmail(email);
+      // toast("Sent email");
+    }
   };
 
   return (
@@ -62,7 +80,7 @@ const Login = () => {
             required
           />
         </Form.Group>
-        <Button variant="primary" type="Login">
+        <Button variant="primary w-50 mx-auto d-block mb-2" type="submit">
           Login
         </Button>
       </Form>
@@ -70,13 +88,23 @@ const Login = () => {
       <p>
         New to FlyWay?{" "}
         <span
-          className="text-danger text-decoration-none"
+          className="text-primary text-decoration-none"
           onClick={navigateRegister}
         >
           Please Register
         </span>
       </p>
+      <p>
+        Forget Password?
+        <button
+          className="btn btn-link text-primary pe-auto text-decoration-none"
+          onClick={resetPassword}
+        >
+          Reset Pasword
+        </button>
+      </p>
       <SocialLogin></SocialLogin>
+      <ToastContainer />
     </div>
   );
 };
