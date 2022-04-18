@@ -23,7 +23,7 @@ const Header = () => {
       >
         <Container>
           <Navbar.Brand as={Link} to="/">
-            <img src={logo} alt="" /> FLYWAY
+            <img src={logo} alt="" /> <span className="fw-bold">FLYWAY</span>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
