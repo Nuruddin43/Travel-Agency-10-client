@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { Button, Form, ToastContainer } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
 import {
   useSendPasswordResetEmail,
   useSignInWithEmailAndPassword,
@@ -8,6 +8,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 import auth from "../../../firebase.init";
 import Loading from "../../Shared/Loading/Loading";
 import SocialLogin from "../SocialLogin/SocialLogin";
+import { ToastContainer, toast } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const emailRef = useRef("");
@@ -50,7 +53,9 @@ const Login = () => {
     const email = emailRef.current.value;
     if (email) {
       await sendPasswordResetEmail(email);
-      // toast("Sent email");
+      toast("Sent email");
+    } else {
+      toast("please enter your email address");
     }
   };
 
@@ -86,7 +91,7 @@ const Login = () => {
       </Form>
       {errorElement}
       <p>
-        New to FlyWay?{" "}
+        New to FlyWay?
         <span
           className="text-primary text-decoration-none"
           onClick={navigateRegister}
