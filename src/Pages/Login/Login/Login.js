@@ -1,21 +1,30 @@
 import React, { useRef } from "react";
 import { Button, Form } from "react-bootstrap";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import auth from "../../../firebase.init";
+import SocialLogin from "../SocialLogin/SocialLogin";
 
 const Login = () => {
   const emailRef = useRef("");
   const passwordRef = useRef("");
   const navigate = useNavigate();
+  const location = useLocation();
+
+  let from = location.state?.from?.pathname || "/";
+
+  let errorElement;
 
   const [signInWithEmailAndPassword, user, loading, error] =
     useSignInWithEmailAndPassword(auth);
 
   if (user) {
-    navigate("/home");
+    navigate(from, { replace: true });
   }
 
+  if (error) {
+    errorElement = <p className="text-danger">Error: {error?.message}</p>;
+  }
   const handleLogin = (event) => {
     event.preventDefault();
     const email = emailRef.current.value;
@@ -57,6 +66,7 @@ const Login = () => {
           Login
         </Button>
       </Form>
+      {errorElement}
       <p>
         New to FlyWay?{" "}
         <span
@@ -66,6 +76,7 @@ const Login = () => {
           Please Register
         </span>
       </p>
+      <SocialLogin></SocialLogin>
     </div>
   );
 };
